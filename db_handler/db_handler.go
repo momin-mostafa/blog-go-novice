@@ -1,8 +1,6 @@
 package dbhandler
 
 import (
-	coursemodel "backend/course_model"
-	userModel "backend/user"
 	"fmt"
 
 	"gorm.io/driver/postgres"
@@ -30,13 +28,5 @@ func InitalizeDB() *gorm.DB {
 
 	fmt.Println("Connected to PostgreSQL!")
 
-	fmt.Println("Auto Migrating User")
-
-	err = db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
-	if err != nil {
-		panic("AUTO MIGRATION FAILED FOR USER")
-	}
-
-	fmt.Println("DB IS UPTO DATE AND RUNNING")
 	return db
 }
