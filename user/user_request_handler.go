@@ -13,6 +13,7 @@ import (
 type UserRequestHandler struct{}
 
 func (uRH *UserRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case http.MethodGet:
 		uRH.getUser(w, r)
@@ -38,7 +39,7 @@ func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request
 	user := req.createUser()
 
 	dbhandler.GetDBPointer().Create(&user)
-	w.Header().Set("Content-Type", "application/json")
+
 	json.NewEncoder(w).Encode(user)
 }
 
@@ -59,6 +60,5 @@ func (uRH *UserRequestHandler) getUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
