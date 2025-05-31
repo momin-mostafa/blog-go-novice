@@ -13,6 +13,9 @@ var db *gorm.DB
 var err error
 
 func GetDBPointer() *gorm.DB {
+	if db == nil {
+		panic("DB Instance Is Nil")
+	}
 	return db
 }
 
