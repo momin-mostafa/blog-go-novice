@@ -19,6 +19,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/", &rootrequesthandler.RootRequestHandler{})
 	mux.Handle("/user", &userModel.UserRequestHandler{})
+	mux.Handle("/course", &coursemodel.CourseRequestHandler{})
 
 	fmt.Println("Auto Migrating User")
 
