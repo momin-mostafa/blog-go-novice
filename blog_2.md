@@ -444,3 +444,69 @@ func (uRH *UserRequestHandler) getUser(w http.ResponseWriter, r *http.Request) {
 ```
 
 While it's not perfectly polished, it's sufficiently clean for now.
+
+Summary by chatgpt
+---
+
+### 🏗️ Backend Development Log — Go + GORM
+
+This repository documents my ongoing journey building a backend in Go.
+I’m refining the architecture, learning best practices, and gradually evolving the system toward a clean, testable, and scalable structure. 🚀
+
+---
+
+### ⚙️ Project Structure Improvements
+
+To keep things organized, I extracted the `RootRequestHandler` from `main.go`.
+Each handler now has its own package and implements `ServeHTTP`, following Go’s idiomatic approach to routing. It keeps the entry point minimal and easier to maintain. ✨
+
+---
+
+### 🗄️ Database Layer (Powered by GORM)
+
+I refactored the database logic into a dedicated `dbhandler` package.
+This layer now:
+
+* Opens a PostgreSQL connection using **GORM**
+* Runs **auto-migrations** for `User` and `Course` models
+* Exposes a shared DB instance with `GetDBPointer()`
+
+Switching to an ORM has made development much smoother as I learn more about backend patterns. 🧩
+
+---
+
+### 👤 User API Endpoints
+
+I added two core features for the `User` resource:
+
+#### **POST /user**
+
+Creates a new user from JSON input.
+Uses a `CreateUserRequest` struct to transform request data into a `User` model.
+
+#### **GET /user?user_id={id}**
+
+Fetches a user by ID with proper error handling for missing or invalid queries.
+
+This separation keeps request parsing clean and avoids coupling JSON structures directly to DB models. 🔄
+
+---
+
+### 🧹 General Improvements
+
+* Centralized `"Content-Type: application/json"` inside the main handler
+* Added consistent error responses
+* Improved readability and reduced duplication
+
+Not perfect yet, but definitely moving toward a more maintainable architecture. 😄
+
+---
+
+### 🧪 Next Steps: TDD
+
+My next focus is implementing **unit tests** and shifting toward **Test-Driven Development (TDD)**.
+Starting early will help keep the codebase stable as more features are added. 🧪⚡
+
+---
+
+## TO BE CONTINUED ...
