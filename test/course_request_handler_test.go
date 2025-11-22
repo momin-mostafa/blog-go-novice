@@ -6,14 +6,22 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"gorm.io/gorm"
 )
+
+func MockDBPointer() *MockDB {
+	return &MockDB{}
+}
+
+type MockDB = gorm.DB
 
 func TestCourseRequestHandler(t *testing.T) {
 	handler := &coursemodel.CourseRequestHandler{}
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	w := httptest.NewRecorder()
 
-	handler.HandleRequestDependingOnMethod(w, req)
+	handler.HandleRequestDependingOnMethod(w, req, MockDBPointer())
 
 	resp := w.Result()
 	defer resp.Body.Close()
@@ -22,7 +30,7 @@ func TestCourseRequestHandler(t *testing.T) {
 		t.Errorf("expected status 200 OK, got %d", resp.StatusCode)
 	}
 
-	handler.HandleRequestDependingOnMethod(w, req)
+	handler.HandleRequestDependingOnMethod(w, req, MockDBPointer())
 
 	var body map[string]string
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
