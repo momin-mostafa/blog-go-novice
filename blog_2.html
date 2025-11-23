@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog 2 – Continuation of Backend Development</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #222;
+        }
+        h1, h2 {
+            color: #111;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 12px;
+            overflow-x: auto;
+            border-radius: 6px;
+        }
+        code {
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Continuation of Backend Development</h1>
+
+<p><strong>May 31, 2025 10:19 PM</strong></p>
+
+<p>I refactored my project by separating the <code>RootHandler</code> from <code>main.go</code>. This keeps the entry point cleaner and easier to read.</p>
+
+<h2>Updated main.go</h2>
+
+<pre><code>package main
+
+import (
+    rootrequesthandler "backend/root_request_handler"
+    "database/sql"
+    "fmt"
+    "log"
+    "net/http"
+
+    _ "github.com/lib/pq"
+)
+
+var port string = ":8080"
+var db *sql.DB
+...
+</code></pre>
+
+<h2>RootRequestHandler</h2>
+
+<pre><code>package rootrequesthandler
+
+import (
+    "fmt"
+    "net/http"
+)
+
+type RootRequestHandler struct{}
+
+func (rqh *RootRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    switch r.Method {
+    case http.MethodGet:
+        rqh.handleGET(w)
+    case http.MethodPost:
+        rqh.handlePOST(w)
+    }
+}
+...
+</code></pre>
+
+<h2>Exploring Handler Interfaces</h2>
+
+<p>Using <code>mux.Handle("/", handler)</code> requires the type to implement:</p>
+
+<pre><code>ServeHTTP(w http.ResponseWriter, r *http.Request)
+</code></pre>
+
+<p>This pattern feels similar to interface classes in OOP languages but implemented functionally in Go.</p>
+
+<h2>Extracting DB Handler</h2>
+
+<pre><code>package dbhandler
+
+var db *sql.DB
+
+func GetDB() *sql.DB {
+    if db == nil {
+        db = initalizeDB()
+        return db
+    }
+    return db
+}
+</code></pre>
+
+<p>I attempted a lazy singleton pattern — not fully confident yet, but exploring!</p>
+
+<h2>Switching to GORM</h2>
+
+<p>Writing raw SQL was getting too time-consuming, so I introduced GORM.</p>
+
+<pre><code>db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
+db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
+</code></pre>
+
+<p>This drastically simplifies database operations.</p>
+
+<h2>User Handlers</h2>
+
+<p>I added GET and POST handlers for users:</p>
+
+<pre><code>func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request) {
+    var req CreateUserRequest
+    json.NewDecoder(r.Body).Decode(&req)
+    user := req.createUser()
+    dbhandler.GetDBPointer().Create(&user)
+    json.NewEncoder(w).Encode(user)
+}
+</code></pre>
+
+<h2>CreateUserRequest Adapter Pattern</h2>
+
+<p>The request struct acts like an adapter:</p>
+
+<pre><code>type CreateUserRequest struct {
+    Name  string `json:"name"`
+    Phone string `json:"phone"`
+    FB_ID string `json:"fb_id"`
+    Email string `json:"email"`
+}
+
+func (req *CreateUserRequest) createUser() User {
+    return User{ Name: req.Name, Phone: req.Phone, FB_ID: req.FB_ID, Email: req.Email }
+}
+</code></pre>
+
+<p>It converts input JSON into a DB model. Clean separation → easier to maintain.</p>
+
+<h2>Next Steps</h2>
+
+<p>I want to start adopting TDD to avoid future regressions as the backend grows more complex.</p>
+
+<p><em>June 1, 2025 1:06 AM — Finished implementing user creation and fetching!</em></p>
+
+</body>
+</html>
