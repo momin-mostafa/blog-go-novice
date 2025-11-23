@@ -1,73 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Go Journeys</title>
+    <title>My Go Journeys - Md Al Momin Mostafa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --bg: #ffffff;
+            --text: #222;
+            --card-bg: #f2f2f2;
+            --border: #d0d0d0;
+            --link: #0066cc;
+        }
+
+        [data-theme='dark'] {
+            --bg: #0e0f12;
+            --text: #e6e6e6;
+            --card-bg: #1a1b1e;
+            --border: #2a2b2e;
+            --link: #4da3ff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 760px;
+            font-family: 'Inter', sans-serif;
+            max-width: 820px;
             margin: 40px auto;
             padding: 0 20px;
-            line-height: 1.6;
-            color: #222;
+            line-height: 1.7;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
         }
-        h1, h2 {
-            color: #111;
+
+        h1, h2, h3 {
+            color: var(--text);
+            margin-bottom: 10px;
         }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        nav .title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        nav button {
+            padding: 6px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        /* Author box */
+        .author-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .author-box img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+
+        .author-details p {
+            margin: 4px 0;
+        }
+
+        .contact-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 8px;
+        }
+
+        .contact-list li {
+            margin: 4px 0;
+        }
+
+        /* Blog list */
+        ul.blog-list {
+            padding-left: 0;
+        }
+        ul.blog-list li {
+            margin-bottom: 30px;
+            list-style: none;
+        }
+
+        blockquote {
+            padding: 12px 18px;
+            margin: 10px 0 0 0;
+            border-left: 4px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 6px;
+        }
+
         a {
-            color: #0066cc;
+            color: var(--link);
             text-decoration: none;
         }
         a:hover {
             text-decoration: underline;
         }
-        blockquote {
-            padding: 12px 18px;
-            margin: 10px 0;
-            border-left: 4px solid #888;
-            background: #f7f7f7;
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            font-size: 14px;
+            color: var(--text);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            opacity: 0.8;
         }
-        .author-box {
-            background: #f2f2f2;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .author-box h2 {
-            margin-top: 0;
-        }
-        .contact-list {
-            list-style: none;
-            padding: 0;
-        }
-        .contact-list li {
-            margin: 4px 0;
-        }
+
     </style>
 </head>
+
 <body>
 
-<h1>My Go Journeys</h1>
+<nav>
+    <div class="title">My Go Journeys</div>
+    <button id="themeToggle">🌙 Dark Mode</button>
+</nav>
 
 <div class="author-box">
-    <h2>About Me</h2>
-    <p><strong>Name:</strong> Md Al Momin Mostafa</p>
-    <p><strong>Job Title:</strong> Software Engineer II</p>
-    <p><strong>Company:</strong> Biniyog.io</p>
+    <img src="your-photo.jpg" alt="Profile Photo" />
 
-    <h3>Contact</h3>
-    <ul class="contact-list">
-        <li><strong>Phone:</strong> +8801996304242</li>
-        <li><strong>Email:</strong> <a href="mailto:mominmostafa.g@outlook.com">mominmostafa.g@outlook.com</a></li>
-        <li><strong>GitHub:</strong> <a href="https://github.com/momin-mostafa">github.com/momin-mostafa</a></li>
-        <li><strong>LinkedIn:</strong> 
-            <a href="https://www.linkedin.com/in/al-momin-mostafa/">
-                linkedin.com/in/al-momin-mostafa/
-            </a>
-        </li>
-    </ul>
+    <div class="author-details">
+        <h2>Md Al Momin Mostafa</h2>
+        <p><strong>Software Engineer II</strong></p>
+        <p><strong>Biniyog.io</strong></p>
+
+        <ul class="contact-list">
+            <li><strong>Phone:</strong> +8801996304242</li>
+            <li><strong>Email:</strong> <a href="mailto:mominmostafa.g@outlook.com">mominmostafa.g@outlook.com</a></li>
+            <li><strong>GitHub:</strong> <a href="https://github.com/momin-mostafa">github.com/momin-mostafa</a></li>
+            <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/al-momin-mostafa/">linkedin.com/in/al-momin-mostafa</a></li>
+        </ul>
+    </div>
 </div>
 
 <p>
@@ -79,28 +167,43 @@
 
 <h2>Go & Backend Development</h2>
 
-<ul>
+<ul class="blog-list">
     <li>
         <a href="blog_1.html">
-            Getting Started with Go: Building a RESTful API Server with PostgreSQL Database Integration - A Beginner's Journey
+            Getting Started with Go: Building a RESTful API Server with PostgreSQL Database Integration
         </a>
         <blockquote>
-            In this journey, I built a RESTful API server from scratch using Go, integrated it with a PostgreSQL database, 
-            and implemented routing with <code>ServeMux</code>. I explored core Go concepts like handlers, package 
-            management, and database connectivity—progressing from a beginner to building a working backend in just a few hours.
+            How I built my first Go REST API with ServeMux and PostgreSQL — from structuring packages
+            to API handlers, queries, and database connectivity.
         </blockquote>
     </li>
 
     <li>
-        <a href="blog_2.html">Continuation of backend development</a>
+        <a href="blog_2.html">
+            Continuation of Backend Development
+        </a>
         <blockquote>
-            In this follow-up, I modularized the project by separating request and DB logic into packages. 
-            I replaced raw SQL with GORM for easier database handling and implemented GET/POST methods for user data. 
-            I also introduced an adapter-like pattern for request models and began laying the groundwork for 
-            Test-Driven Development (TDD) as I scale the backend.
+            Modularizing the project, introducing GORM, separating DB and request logic, and preparing
+            the codebase for TDD.
         </blockquote>
     </li>
 </ul>
+
+<footer>
+    © 2025 Md Al Momin Mostafa — All rights reserved.
+</footer>
+
+<script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    toggleBtn.addEventListener("click", () => {
+        const current = html.getAttribute("data-theme");
+        const next = current === "light" ? "dark" : "light";
+        html.setAttribute("data-theme", next);
+        toggleBtn.textContent = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
+    });
+</script>
 
 </body>
 </html>
