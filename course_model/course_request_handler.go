@@ -22,7 +22,7 @@ func (cRH *CourseRequestHandler) HandleRequestDependingOnMethod(w http.ResponseW
 		cRH.GetAllCourses(r, w, db)
 
 	case http.MethodPost:
-		cRH.CreateCourse(w, db, r)
+		cRH.CreateCourse(w, r, db)
 
 	case http.MethodDelete:
 		json.NewEncoder(w).Encode(map[string]string{"message": "id course deleted"})
@@ -92,7 +92,7 @@ func (cRH *CourseRequestHandler) GetAllCourses(r *http.Request, w http.ResponseW
 	json.NewEncoder(w).Encode(courses)
 }
 
-func (cRH *CourseRequestHandler) CreateCourse(w http.ResponseWriter, db *gorm.DB, r *http.Request) {
+func (cRH *CourseRequestHandler) CreateCourse(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var course Course
 	if err := json.NewDecoder(r.Body).Decode(&course); err != nil {
 		http.Error(w, "Invalid course data", http.StatusBadRequest)
