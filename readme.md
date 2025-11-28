@@ -11,3 +11,13 @@ I've decided to keep a note or blog documenting my weekend explorations into dif
 - [Continuation of backend development](blog_2.md)
 
 > In this follow-up, I modularized the project by separating request and DB logic into packages. I replaced raw SQL with GORM for easier database handling and implemented GET/POST methods for user data. I also introduced an adapter-like pattern for request models and began laying the groundwork for Test-Driven Development (TDD) as I scale the backend.
+
+## how to run the code 
+To create executable command :  
+```bash 
+go build .
+``` 
+To run the project command : 
+```bash 
+go run main.go 
+``` 
