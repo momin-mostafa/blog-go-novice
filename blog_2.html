@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog 2 – Continuation of Backend Development</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </head>
 
 <body>
@@ -19,12 +23,12 @@
 
     <p><strong>May 31, 2025 10:19 PM</strong></p>
 
-    <p>I refactored my project by separating the <code>RootHandler</code> from <code>main.go</code>. This keeps the
+    <p>I refactored my project by separating the <code class="go">RootHandler</code> from <code class="go">main.go</code>. This keeps the
         entry point cleaner and easier to read.</p>
 
     <h2>Updated main.go</h2>
 
-    <pre><code>package main
+    <pre><code class="go">package main
 
 import (
     rootrequesthandler "backend/root_request_handler"
@@ -43,7 +47,7 @@ var db *sql.DB
 
     <h2>RootRequestHandler</h2>
 
-    <pre><code>package rootrequesthandler
+    <pre><code class="go">package rootrequesthandler
 
 import (
     "fmt"
@@ -65,16 +69,16 @@ func (rqh *RootRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 
     <h2>Exploring Handler Interfaces</h2>
 
-    <p>Using <code>mux.Handle("/", handler)</code> requires the type to implement:</p>
+    <p>Using <code class="go">mux.Handle("/", handler)</code> requires the type to implement:</p>
 
-    <pre><code>ServeHTTP(w http.ResponseWriter, r *http.Request)
+    <pre><code class="go">ServeHTTP(w http.ResponseWriter, r *http.Request)
 </code></pre>
 
     <p>This pattern feels similar to interface classes in OOP languages but implemented functionally in Go.</p>
 
     <h2>Extracting DB Handler</h2>
 
-    <pre><code>package dbhandler
+    <pre><code class="go">package dbhandler
 
 var db *sql.DB
 
@@ -93,7 +97,7 @@ func GetDB() *sql.DB {
 
     <p>Writing raw SQL was getting too time-consuming, so I introduced GORM.</p>
 
-    <pre><code>db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
+    <pre><code class="go">db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
 db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
 </code></pre>
 
@@ -103,7 +107,7 @@ db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
 
     <p>I added GET and POST handlers for users:</p>
 
-    <pre><code>func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request) {
+    <pre><code class="go">func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request) {
     var req CreateUserRequest
     json.NewDecoder(r.Body).Decode(&req)
     user := req.createUser()
@@ -116,7 +120,7 @@ db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
 
     <p>The request struct acts like an adapter:</p>
 
-    <pre><code>type CreateUserRequest struct {
+    <pre><code class="go">type CreateUserRequest struct {
     Name  string `json:"name"`
     Phone string `json:"phone"`
     FB_ID string `json:"fb_id"`
