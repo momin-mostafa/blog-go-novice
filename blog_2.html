@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog 2 – Continuation of Backend Development</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<nav>
-    <div class="title"><a href="index.html" style="text-decoration:none;color:var(--text)">My Go Journeys</a></div>
-    <button id="themeToggle">🌙 Dark Mode</button>
-</nav>
+    <nav>
+        <div class="title"><a href="index.html" style="text-decoration:none;color:var(--text)">My Go Journeys</a></div>
+        <button id="themeToggle">🌙 Dark Mode</button>
+    </nav>
 
-<h1>Continuation of Backend Development</h1>
+    <h1>Continuation of Backend Development</h1>
 
-<p><strong>May 31, 2025 10:19 PM</strong></p>
+    <p><strong>May 31, 2025 10:19 PM</strong></p>
 
-<p>I refactored my project by separating the <code>RootHandler</code> from <code>main.go</code>. This keeps the entry point cleaner and easier to read.</p>
+    <p>I refactored my project by separating the <code>RootHandler</code> from <code>main.go</code>. This keeps the
+        entry point cleaner and easier to read.</p>
 
-<h2>Updated main.go</h2>
+    <h2>Updated main.go</h2>
 
-<pre><code>package main
+    <pre><code>package main
 
 import (
     rootrequesthandler "backend/root_request_handler"
@@ -38,9 +41,9 @@ var db *sql.DB
 ...
 </code></pre>
 
-<h2>RootRequestHandler</h2>
+    <h2>RootRequestHandler</h2>
 
-<pre><code>package rootrequesthandler
+    <pre><code>package rootrequesthandler
 
 import (
     "fmt"
@@ -60,18 +63,18 @@ func (rqh *RootRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 ...
 </code></pre>
 
-<h2>Exploring Handler Interfaces</h2>
+    <h2>Exploring Handler Interfaces</h2>
 
-<p>Using <code>mux.Handle("/", handler)</code> requires the type to implement:</p>
+    <p>Using <code>mux.Handle("/", handler)</code> requires the type to implement:</p>
 
-<pre><code>ServeHTTP(w http.ResponseWriter, r *http.Request)
+    <pre><code>ServeHTTP(w http.ResponseWriter, r *http.Request)
 </code></pre>
 
-<p>This pattern feels similar to interface classes in OOP languages but implemented functionally in Go.</p>
+    <p>This pattern feels similar to interface classes in OOP languages but implemented functionally in Go.</p>
 
-<h2>Extracting DB Handler</h2>
+    <h2>Extracting DB Handler</h2>
 
-<pre><code>package dbhandler
+    <pre><code>package dbhandler
 
 var db *sql.DB
 
@@ -84,23 +87,23 @@ func GetDB() *sql.DB {
 }
 </code></pre>
 
-<p>I attempted a lazy singleton pattern — not fully confident yet, but exploring!</p>
+    <p>I attempted a lazy singleton pattern — not fully confident yet, but exploring!</p>
 
-<h2>Switching to GORM</h2>
+    <h2>Switching to GORM</h2>
 
-<p>Writing raw SQL was getting too time-consuming, so I introduced GORM.</p>
+    <p>Writing raw SQL was getting too time-consuming, so I introduced GORM.</p>
 
-<pre><code>db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
+    <pre><code>db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
 db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
 </code></pre>
 
-<p>This drastically simplifies database operations.</p>
+    <p>This drastically simplifies database operations.</p>
 
-<h2>User Handlers</h2>
+    <h2>User Handlers</h2>
 
-<p>I added GET and POST handlers for users:</p>
+    <p>I added GET and POST handlers for users:</p>
 
-<pre><code>func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request) {
+    <pre><code>func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request) {
     var req CreateUserRequest
     json.NewDecoder(r.Body).Decode(&req)
     user := req.createUser()
@@ -109,11 +112,11 @@ db.AutoMigrate(&userModel.User{}, &coursemodel.Course{})
 }
 </code></pre>
 
-<h2>CreateUserRequest Adapter Pattern</h2>
+    <h2>CreateUserRequest Adapter Pattern</h2>
 
-<p>The request struct acts like an adapter:</p>
+    <p>The request struct acts like an adapter:</p>
 
-<pre><code>type CreateUserRequest struct {
+    <pre><code>type CreateUserRequest struct {
     Name  string `json:"name"`
     Phone string `json:"phone"`
     FB_ID string `json:"fb_id"`
@@ -125,89 +128,99 @@ func (req *CreateUserRequest) createUser() User {
 }
 </code></pre>
 
-<p>It converts input JSON into a DB model. Clean separation → easier to maintain.</p>
+    <p>It converts input JSON into a DB model. Clean separation → easier to maintain.</p>
 
-<h2>Next Steps</h2>
+    <h2>Next Steps</h2>
 
-<p>I want to start adopting TDD to avoid future regressions as the backend grows more complex.</p>
+    <p>I want to start adopting TDD to avoid future regressions as the backend grows more complex.</p>
 
-<p><em>June 1, 2025 1:06 AM — Finished implementing user creation and fetching!</em></p>
+    <p><em>June 1, 2025 1:06 AM — Finished implementing user creation and fetching!</em></p>
 
-<div id="blogNav" style="margin-top:40px; display:flex; justify-content:space-between;"></div>
+    <div id="blogNav" style="margin-top:40px; display:flex; justify-content:space-between;"></div>
 
 
-<script>
-    const toggleBtn = document.getElementById("themeToggle");
-    const html = document.documentElement;
+    <script>
+        const toggleBtn = document.getElementById("themeToggle");
+        const html = document.documentElement;
 
-    toggleBtn.addEventListener("click", () => {
-        const current = html.getAttribute("data-theme");
-        const next = current === "light" ? "dark" : "light";
-        html.setAttribute("data-theme", next);
-        toggleBtn.textContent = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
-    });
-</script>
+        // Restore theme from localStorage on page load
+        const savedTheme = localStorage.getItem("theme") || "light";
+        html.setAttribute("data-theme", savedTheme);
+        toggleBtn.textContent = savedTheme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
 
-<script>
-const username = "momin-mostafa";   // YOUR GitHub username
-const repo = "blog-go-novice";      // YOUR repo name
+        // Toggle theme on button click
+        toggleBtn.addEventListener("click", () => {
+            const current = html.getAttribute("data-theme");
+            const next = current === "light" ? "dark" : "light";
+            html.setAttribute("data-theme", next);
+            toggleBtn.textContent = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
 
-async function buildNavigation() {
-    const url = `https://api.github.com/repos/${username}/${repo}/contents/`;
-    const res = await fetch(url);
-    const files = await res.json();
+            // Save the choice so it persists on page changes
+            localStorage.setItem("theme", next);
+        });
+    </script>
 
-    // Filter blog files: blog_1.html, blog_2.html, ...
-    let blogs = files
-        .filter(f => /^blog_\d+\.html$/.test(f.name))
-        .map(f => f.name);
+    <script>
+        const username = "momin-mostafa";   // YOUR GitHub username
+        const repo = "blog-go-novice";      // YOUR repo name
 
-    // Sort numerically (1, 2, 3 ...)
-    blogs.sort((a, b) => {
-        const n1 = parseInt(a.match(/\d+/)[0]);
-        const n2 = parseInt(b.match(/\d+/)[0]);
-        return n1 - n2;
-    });
+        async function buildNavigation() {
+            const url = `https://api.github.com/repos/${username}/${repo}/contents/`;
+            const res = await fetch(url);
+            const files = await res.json();
 
-    const current = window.location.pathname.split("/").pop();
-    const index = blogs.indexOf(current);
+            // Filter blog files: blog_1.html, blog_2.html, ...
+            let blogs = files
+                .filter(f => /^blog_\d+\.html$/.test(f.name))
+                .map(f => f.name);
 
-    const blogNav = document.getElementById("blogNav");
+            // Sort numerically (1, 2, 3 ...)
+            blogs.sort((a, b) => {
+                const n1 = parseInt(a.match(/\d+/)[0]);
+                const n2 = parseInt(b.match(/\d+/)[0]);
+                return n1 - n2;
+            });
 
-    let html = "";
+            const current = window.location.pathname.split("/").pop();
+            const index = blogs.indexOf(current);
 
-    // Previous blog
-    if (index > 0) {
-        html += `<button onclick="location.href='${blogs[index - 1]}'" 
+            const blogNav = document.getElementById("blogNav");
+
+            let html = "";
+
+            // Previous blog
+            if (index > 0) {
+                html += `<button onclick="location.href='${blogs[index - 1]}'" 
                  style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
                  ⬅ Previous
                  </button>`;
-    } else {
-        html += `<button onclick="location.href='index.html'" 
+            } else {
+                html += `<button onclick="location.href='index.html'" 
                  style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
                  🏡 Home
                  </button>`; // navigates to home
-    }
+            }
 
-    // Next blog
-    if (index < blogs.length - 1) {
-        html += `<button onclick="location.href='${blogs[index + 1]}'" 
+            // Next blog
+            if (index < blogs.length - 1) {
+                html += `<button onclick="location.href='${blogs[index + 1]}'" 
                  style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
                  Next ➜
                  </button>`;
-    } else {
-        html += `<button onclick="location.href='index.html'" 
+            } else {
+                html += `<button onclick="location.href='index.html'" 
                  style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
                  🏡 Home
                  </button>`; // navigates to home
-    }
+            }
 
-    blogNav.innerHTML = html;
-}
+            blogNav.innerHTML = html;
+        }
 
-buildNavigation();
-</script>
+        buildNavigation();
+    </script>
 
 
 </body>
+
 </html>
