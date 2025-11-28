@@ -29,6 +29,11 @@
 </head>
 <body>
 
+<nav>
+    <div class="title"><a href="index.html" style="text-decoration:none;color:var(--text)">My Go Journeys</a></div>
+    <button id="themeToggle">🌙 Dark Mode</button>
+</nav>
+
 <h1>Continuation of Backend Development</h1>
 
 <p><strong>May 31, 2025 10:19 PM</strong></p>
@@ -148,6 +153,74 @@ func (req *CreateUserRequest) createUser() User {
 <p>I want to start adopting TDD to avoid future regressions as the backend grows more complex.</p>
 
 <p><em>June 1, 2025 1:06 AM — Finished implementing user creation and fetching!</em></p>
+
+<div id="blogNav" style="margin-top:40px; display:flex; justify-content:space-between;"></div>
+
+
+<script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    toggleBtn.addEventListener("click", () => {
+        const current = html.getAttribute("data-theme");
+        const next = current === "light" ? "dark" : "light";
+        html.setAttribute("data-theme", next);
+        toggleBtn.textContent = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
+    });
+</script>
+
+<script>
+const username = "momin-mostafa";   // YOUR GitHub username
+const repo = "blog-go-novice";      // YOUR repo name
+
+async function buildNavigation() {
+    const url = `https://api.github.com/repos/${username}/${repo}/contents/`;
+    const res = await fetch(url);
+    const files = await res.json();
+
+    // Filter blog files: blog_1.html, blog_2.html, ...
+    let blogs = files
+        .filter(f => /^blog_\d+\.html$/.test(f.name))
+        .map(f => f.name);
+
+    // Sort numerically (1, 2, 3 ...)
+    blogs.sort((a, b) => {
+        const n1 = parseInt(a.match(/\d+/)[0]);
+        const n2 = parseInt(b.match(/\d+/)[0]);
+        return n1 - n2;
+    });
+
+    const current = window.location.pathname.split("/").pop();
+    const index = blogs.indexOf(current);
+
+    const blogNav = document.getElementById("blogNav");
+
+    let html = "";
+
+    // Previous blog
+    if (index > 0) {
+        html += `<button onclick="location.href='${blogs[index - 1]}'" 
+                 style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
+                 ⬅ Previous
+                 </button>`;
+    } else {
+        html += `<div></div>`; // keeps spacing
+    }
+
+    // Next blog
+    if (index < blogs.length - 1) {
+        html += `<button onclick="location.href='${blogs[index + 1]}'" 
+                 style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
+                 Next ➜
+                 </button>`;
+    }
+
+    blogNav.innerHTML = html;
+}
+
+buildNavigation();
+</script>
+
 
 </body>
 </html>
