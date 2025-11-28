@@ -31,7 +31,7 @@ func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request
 	}
 	defer r.Body.Close()
 
-	if req.Name == "" || req.Phone == "" {
+	if req.FullName == "" || req.Phone == "" || req.StudentID == "" {
 		http.Error(w, "name and phone cannot be empty", http.StatusBadRequest)
 		return
 	}
