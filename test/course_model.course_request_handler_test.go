@@ -2,6 +2,7 @@ package test
 
 import (
 	coursemodel "backend/course_model"
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -141,4 +142,63 @@ func RunAllCoursesTests(t *testing.T) {
 	t.Run("GetAllCourses_GroupOnly", TestGetAllCourses_GroupOnly)
 	t.Run("GetAllCourses_TeacherOnly", TestGetAllCourses_TeacherOnly)
 	t.Run("GetAllCourses_NoParams", TestGetAllCourses_NoParams)
+	t.Run("CreateCourse", TestCreateCourse)
+}
+
+func TestCreateCourse(t *testing.T) {
+	db, mock := setupMockDB(t)
+	defer closeDB(db)
+
+	handler := &coursemodel.CourseRequestHandler{}
+
+	// Input course JSON
+	input := `{
+        "teacher_id": 10,
+        "classroom_code": "101",
+        "group": "A"
+    }`
+
+	req := httptest.NewRequest("POST", "/course", bytes.NewBufferString(input))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+
+	// Expected DB insert behavior
+	mock.ExpectBegin() // GORM wraps Create in a transaction
+
+	mock.ExpectQuery(`INSERT INTO "courses"`).
+		WithArgs(
+			sqlmock.AnyArg(),
+			sqlmock.AnyArg(),
+			nil,
+			10,
+			"101",
+			"A",
+		).
+		WillReturnRows(
+			sqlmock.NewRows([]string{"id"}).AddRow(1),
+		)
+
+	mock.ExpectCommit()
+
+	handler.CreateCourse(rr, req, db)
+
+	// ----------- Assertions  -------------
+
+	if rr.Code != http.StatusCreated {
+		t.Fatalf("expected status 201, got %d", rr.Code)
+	}
+
+	var course coursemodel.Course
+	if err := json.NewDecoder(rr.Body).Decode(&course); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	if course.TeacherID != 10 || course.ClassroomCode != "101" || course.Group != "A" {
+		t.Fatalf("unexpected course values: %+v", course)
+	}
+
+	// Ensure all SQL expectations were met
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("there were unfulfilled expectations: %v", err)
+	}
 }
