@@ -71,26 +71,7 @@
         © 2025 Md Al Momin Mostafa — All rights reserved.
     </footer>
 
-    <script>
-        const toggleBtn = document.getElementById("themeToggle");
-        const html = document.documentElement;
-
-        // Restore theme from localStorage on page load
-        const savedTheme = localStorage.getItem("theme") || "light";
-        html.setAttribute("data-theme", savedTheme);
-        toggleBtn.textContent = savedTheme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
-
-        // Toggle theme on button click
-        toggleBtn.addEventListener("click", () => {
-            const current = html.getAttribute("data-theme");
-            const next = current === "light" ? "dark" : "light";
-            html.setAttribute("data-theme", next);
-            toggleBtn.textContent = next === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
-
-            // Save the choice so it persists on page changes
-            localStorage.setItem("theme", next);
-        });
-    </script>
+    <script src="script.js" defer></script>
 
 
 </body>
