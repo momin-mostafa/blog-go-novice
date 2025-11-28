@@ -31,8 +31,8 @@ func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request
 	}
 	defer r.Body.Close()
 
-	if req.FullName == "" || req.Phone == "" || req.StudentID == "" {
-		http.Error(w, "name and phone cannot be empty", http.StatusBadRequest)
+	if req.FullName == "" || req.StudentID == "" {
+		http.Error(w, "full_name & student_id cannot be empty to create user", http.StatusBadRequest)
 		return
 	}
 
@@ -44,13 +44,13 @@ func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request
 }
 
 func (uRH *UserRequestHandler) getUser(w http.ResponseWriter, r *http.Request) {
-	userId := r.URL.Query().Get("user_id")
-	if userId == "" {
-		http.Error(w, "user_id cannot be empty", http.StatusBadRequest)
+	student_id := r.URL.Query().Get("student_id")
+	if student_id == "" {
+		http.Error(w, "student_id cannot be empty", http.StatusBadRequest)
 	}
 
 	var user User
-	err := dbhandler.GetDBPointer().First(&user, userId).Error
+	err := dbhandler.GetDBPointer().Where("student_id = ?", student_id).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			fmt.Fprintf(w, "User not found")
