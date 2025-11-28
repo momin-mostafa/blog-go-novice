@@ -17,14 +17,14 @@ func TestGetAllCourses_GroupAndTeacher(t *testing.T) {
 	defer closeDB(db)
 
 	// Mock query
-	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "`group`"}).
+	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "group"}).
 		AddRow(1, time.Now(), time.Now(), nil, 10, "101", "A")
 
 	mock.ExpectQuery(`SELECT .* FROM "courses".*WHERE.*`).
 		WithArgs("A", 10).
 		WillReturnRows(rows)
 
-	req := httptest.NewRequest("GET", "/course?Group=A&TeacherID=10", nil)
+	req := httptest.NewRequest("GET", "/course?group=A&teacher_id=10", nil)
 	rr := httptest.NewRecorder()
 
 	handler := &coursemodel.CourseRequestHandler{}
@@ -48,14 +48,14 @@ func TestGetAllCourses_GroupOnly(t *testing.T) {
 	db, mock := setupMockDB(t)
 	defer closeDB(db)
 
-	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "`group`"}).
+	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "group"}).
 		AddRow(1, time.Now(), time.Now(), nil, 10, "101", "A")
 
-	mock.ExpectQuery(`SELECT .* FROM "courses".*WHERE.*Group.*`).
+	mock.ExpectQuery(`SELECT .* FROM "courses".*WHERE.*group.*`).
 		WithArgs("A").
 		WillReturnRows(rows)
 
-	req := httptest.NewRequest("GET", "/course?Group=A", nil)
+	req := httptest.NewRequest("GET", "/course?group=A", nil)
 	rr := httptest.NewRecorder()
 
 	handler := &coursemodel.CourseRequestHandler{}
@@ -79,14 +79,14 @@ func TestGetAllCourses_TeacherOnly(t *testing.T) {
 	db, mock := setupMockDB(t)
 	defer closeDB(db)
 
-	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "`group`"}).
+	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "group"}).
 		AddRow(1, time.Now(), time.Now(), nil, 10, "101", "A")
 
 	mock.ExpectQuery(`SELECT .* FROM "courses".*WHERE.*teacher_id.*`).
 		WithArgs(10).
 		WillReturnRows(rows)
 
-	req := httptest.NewRequest("GET", "/course?TeacherID=10", nil)
+	req := httptest.NewRequest("GET", "/course?teacher_id=10", nil)
 	rr := httptest.NewRecorder()
 
 	handler := &coursemodel.CourseRequestHandler{}
@@ -110,7 +110,7 @@ func TestGetAllCourses_NoParams(t *testing.T) {
 	db, mock := setupMockDB(t)
 	defer closeDB(db)
 
-	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "`group`"}).
+	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "group"}).
 		AddRow(1, time.Now(), time.Now(), nil, 10, "101", "A").
 		AddRow(2, time.Now(), time.Now(), nil, 11, "102", "B")
 
