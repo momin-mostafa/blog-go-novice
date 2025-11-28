@@ -4,6 +4,7 @@ import (
 	dbhandler "backend/db_handler"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -37,32 +38,23 @@ func (cRH *CourseRequestHandler) HandleRequestDependingOnMethod(w http.ResponseW
 }
 
 func (cRH *CourseRequestHandler) GetAllCourses(r *http.Request, w http.ResponseWriter, db *gorm.DB) {
-	if r.URL.Query().Get("Group") != "" {
-		group := r.URL.Query().Get("Group")
-		var courses []Course
-		if err := db.Where("Group = ?", group).Find(&courses).Error; err != nil {
-			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
+	group := r.URL.Query().Get("group")
+	teacherIDStr := r.URL.Query().Get("teacher_id")
+	var teacherID int
+	var err error
+
+	if teacherIDStr != "" {
+		teacherID, err = strconv.Atoi(teacherIDStr)
+		if err != nil {
+			http.Error(w, "TeacherID must be a number", http.StatusBadRequest)
 			return
 		}
-		json.NewEncoder(w).Encode(courses)
-		return
 	}
-	if r.URL.Query().Get("TeacherID") != "" {
-		teacherID := r.URL.Query().Get("TeacherID")
+
+	// Combined query first
+	if group != "" && teacherIDStr != "" {
 		var courses []Course
-		if err := db.Where("teacher_id = ?", teacherID).Find(&courses).Error; err != nil {
-			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
-			return
-		}
-		json.NewEncoder(w).Encode(courses)
-		return
-	}
-	// handle case where multiple query parameters are provided
-	if r.URL.Query().Get("Group") != "" && r.URL.Query().Get("TeacherID") != "" {
-		group := r.URL.Query().Get("Group")
-		teacherID := r.URL.Query().Get("TeacherID")
-		var courses []Course
-		if err := db.Where("Group = ? AND TeacherID = ?", group, teacherID).Find(&courses).Error; err != nil {
+		if err := db.Where("\"group\" = ? AND \"teacher_id\" = ?", group, teacherID).Find(&courses).Error; err != nil {
 			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
 			return
 		}
@@ -70,12 +62,34 @@ func (cRH *CourseRequestHandler) GetAllCourses(r *http.Request, w http.ResponseW
 		return
 	}
 
-	var course []Course
-	if err := dbhandler.GetDBPointer().Find(&course).Error; err != nil {
+	// Single filters
+	if group != "" {
+		var courses []Course
+		if err := db.Where("\"group\" = ?", group).Find(&courses).Error; err != nil {
+			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(courses)
+		return
+	}
+
+	if teacherIDStr != "" {
+		var courses []Course
+		if err := db.Where("\"teacher_id\" = ?", teacherID).Find(&courses).Error; err != nil {
+			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(courses)
+		return
+	}
+
+	// No filters, return all
+	var courses []Course
+	if err := db.Find(&courses).Error; err != nil {
 		http.Error(w, "Error fetching courses", http.StatusInternalServerError)
 		return
 	}
-	json.NewEncoder(w).Encode(course)
+	json.NewEncoder(w).Encode(courses)
 }
 
 func (cRH *CourseRequestHandler) CreateCourse(w http.ResponseWriter, db *gorm.DB, r *http.Request) {
