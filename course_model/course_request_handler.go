@@ -54,7 +54,7 @@ func (cRH *CourseRequestHandler) GetAllCourses(r *http.Request, w http.ResponseW
 	// Combined query first
 	if group != "" && teacherIDStr != "" {
 		var courses []Course
-		if err := db.Where("\"group\" = ? AND \"teacher_id\" = ?", group, teacherID).Find(&courses).Error; err != nil {
+		if err := db.Where(&Course{Group: group, TeacherID: uint(teacherID)}).Find(&courses).Error; err != nil {
 			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
 			return
 		}
@@ -65,7 +65,7 @@ func (cRH *CourseRequestHandler) GetAllCourses(r *http.Request, w http.ResponseW
 	// Single filters
 	if group != "" {
 		var courses []Course
-		if err := db.Where("\"group\" = ?", group).Find(&courses).Error; err != nil {
+		if err := db.Where(&Course{Group: group}).Find(&courses).Error; err != nil {
 			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
 			return
 		}
@@ -75,7 +75,7 @@ func (cRH *CourseRequestHandler) GetAllCourses(r *http.Request, w http.ResponseW
 
 	if teacherIDStr != "" {
 		var courses []Course
-		if err := db.Where("\"teacher_id\" = ?", teacherID).Find(&courses).Error; err != nil {
+		if err := db.Where(&Course{TeacherID: uint(teacherID)}).Find(&courses).Error; err != nil {
 			http.Error(w, "Error fetching courses", http.StatusInternalServerError)
 			return
 		}
