@@ -40,7 +40,7 @@ func (uRH *UserRequestHandler) CreateUser(w http.ResponseWriter, r *http.Request
 
 	db.Create(&user)
 
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(user.toResponse())
 }
 
 func (uRH *UserRequestHandler) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +50,9 @@ func (uRH *UserRequestHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	err := dbhandler.GetDBPointer().Where("student_id = ?", student_id).First(&user).Error
+	err := dbhandler.GetDBPointer().Where(&User{
+		StudentID: student_id,
+	}).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			fmt.Fprintf(w, "User not found")
@@ -59,6 +61,7 @@ func (uRH *UserRequestHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	var userResponse = user.toResponse()
 
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(userResponse)
 }
