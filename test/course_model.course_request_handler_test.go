@@ -20,8 +20,8 @@ func TestGetAllCourses_GroupAndTeacher(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "teacher_id", "classroom_code", "group"}).
 		AddRow(1, time.Now(), time.Now(), nil, 10, "101", "A")
 
-	mock.ExpectQuery(`SELECT .* FROM "courses".*WHERE.*`).
-		WithArgs("A", 10).
+	mock.ExpectQuery(`SELECT \* FROM "courses" WHERE \("courses"\."teacher_id" = \$1 AND "courses"\."group" = \$2\) AND "courses"\."deleted_at" IS NULL`).
+		WithArgs(uint(10), "A").
 		WillReturnRows(rows)
 
 	req := httptest.NewRequest("GET", "/course?group=A&teacher_id=10", nil)
