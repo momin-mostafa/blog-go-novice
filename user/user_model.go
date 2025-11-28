@@ -35,3 +35,23 @@ func (req *CreateUserRequest) createUser() User {
 
 	return user
 }
+
+func (user User) toResponse() UserResponse {
+	return UserResponse{
+		ID:             user.ID,
+		FullName:       user.FullName,
+		Phone:          user.Phone,
+		StudentID:      user.StudentID,
+		PersonalEmail:  user.PersonalEmail,
+		UnivesityEmail: user.UnivesityEmail,
+	}
+}
+
+type UserResponse struct {
+	ID             uint   `json:"id"`
+	FullName       string `json:"full_name"`
+	Phone          string `json:"phone"`
+	StudentID      string `json:"student_id"`
+	PersonalEmail  string `json:"personal_email"`
+	UnivesityEmail string `json:"university_email"`
+}
