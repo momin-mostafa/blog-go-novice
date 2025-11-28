@@ -27,3 +27,7 @@ To run the project command :
 ```bash 
 go run main.go 
 ``` 
+To run test : 
+```bash
+go test ./test
+```
