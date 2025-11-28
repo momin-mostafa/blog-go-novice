@@ -82,11 +82,25 @@ func TestCreateUserResponse(t *testing.T) {
 		t.Errorf("expected 200, got %d", rr.Code)
 	}
 
-	var user userModel.User
-	if err := json.NewDecoder(rr.Body).Decode(&user); err != nil {
+	var resp map[string]interface{}
+	if err := json.NewDecoder(rr.Body).Decode(&resp); err != nil {
 		t.Fatalf("failed to decode response: %v", err)
 	}
-	if user.FullName != "tamim mostafa" || user.StudentID != "12345" {
-		t.Errorf("unexpected user data: %+v", user)
+
+	// Check field names and values
+	if resp["full_name"] != "tamim mostafa" {
+		t.Errorf("expected full_name=tamim mostafa, got %v", resp["full_name"])
+	}
+
+	if resp["student_id"] != "12345" {
+		t.Errorf("expected student_id=12345, got %v", resp["student_id"])
+	}
+
+	// Optional: check all keys exist
+	expectedKeys := []string{"full_name", "student_id", "phone", "personal_email", "university_email", "id"}
+	for _, key := range expectedKeys {
+		if _, ok := resp[key]; !ok {
+			t.Errorf("missing key in response: %s", key)
+		}
 	}
 }
