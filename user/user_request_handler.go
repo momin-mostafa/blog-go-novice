@@ -16,13 +16,13 @@ func (uRH *UserRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case http.MethodGet:
-		uRH.getUser(w, r)
+		uRH.GetUser(w, r)
 	case http.MethodPost:
-		uRH.createUser(w, r)
+		uRH.CreateUser(w, r, dbhandler.GetDBPointer())
 	}
 }
 
-func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request) {
+func (uRH *UserRequestHandler) CreateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var req CreateUserRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -38,12 +38,12 @@ func (uRH *UserRequestHandler) createUser(w http.ResponseWriter, r *http.Request
 
 	user := req.createUser()
 
-	dbhandler.GetDBPointer().Create(&user)
+	db.Create(&user)
 
 	json.NewEncoder(w).Encode(user)
 }
 
-func (uRH *UserRequestHandler) getUser(w http.ResponseWriter, r *http.Request) {
+func (uRH *UserRequestHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	student_id := r.URL.Query().Get("student_id")
 	if student_id == "" {
 		http.Error(w, "student_id cannot be empty", http.StatusBadRequest)
