@@ -199,7 +199,10 @@ async function buildNavigation() {
                  ⬅ Previous
                  </button>`;
     } else {
-        html += `<div></div>`; // keeps spacing
+        html += `<button onclick="location.href='index.html'" 
+                 style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
+                 🏡 Home
+                 </button>`; // navigates to home
     }
 
     // Next blog
@@ -208,6 +211,11 @@ async function buildNavigation() {
                  style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
                  Next ➜
                  </button>`;
+    } else {
+        html += `<button onclick="location.href='index.html'" 
+                 style="padding:10px 16px; border-radius:8px; background:var(--card-bg); color:var(--text); border:none; cursor:pointer;">
+                 🏡 Home
+                 </button>`; // navigates to home
     }
 
     blogNav.innerHTML = html;
