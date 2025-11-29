@@ -18,6 +18,12 @@ I've decided to keep a note or blog documenting my weekend explorations into dif
 
 [notion](https://www.notion.so/Continuation-of-backend-development-2b98a248ef8e818f9d9ed7362bd614e1?source=copy_link) [this-specific-blog](https://momin-mostafa.github.io/blog-go-novice/blog_2.html)
 
+- [Unit Testing in Go – Mocking the Database](blog_3.md)
+
+> In this follow-up, I modularized the project by separating request and DB logic into packages. I replaced raw SQL with GORM for easier database handling and implemented GET/POST methods for user data. I also introduced an adapter-like pattern for request models and began laying the groundwork for Test-Driven Development (TDD) as I scale the backend.
+
+[notion](https://www.notion.so/It-s-been-a-while-2b98a248ef8e817da7f8f0a510ee4c38?source=copy_link) [this-specific-blog](https://momin-mostafa.github.io/blog-go-novice/blog_3.html)
+
 ## how to run the code 
 To create executable command :  
 ```bash 
