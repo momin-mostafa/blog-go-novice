@@ -14,7 +14,7 @@ type User struct {
 	UnivesityEmail string
 }
 
-type CreateUserRequest struct {
+type UserRequest struct {
 	FullName       string `json:"full_name"`
 	Phone          string `json:"phone"`
 	StudentID      string `json:"student_id"`
@@ -23,7 +23,7 @@ type CreateUserRequest struct {
 	UnivesityEmail string `json:"university_email"`
 }
 
-func (req *CreateUserRequest) createUser() User {
+func (req *UserRequest) createUser() User {
 	user := User{
 		FullName:       req.FullName,
 		Phone:          req.Phone,

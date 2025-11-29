@@ -23,7 +23,7 @@ func (uRH *UserRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 }
 
 func (uRH *UserRequestHandler) CreateUser(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
-	var req CreateUserRequest
+	var req UserRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
