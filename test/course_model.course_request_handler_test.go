@@ -137,14 +137,6 @@ func TestGetAllCourses_NoParams(t *testing.T) {
 	}
 }
 
-func RunAllCoursesTests(t *testing.T) {
-	t.Run("GetAllCourses_GroupAndTeacher", TestGetAllCourses_GroupAndTeacher)
-	t.Run("GetAllCourses_GroupOnly", TestGetAllCourses_GroupOnly)
-	t.Run("GetAllCourses_TeacherOnly", TestGetAllCourses_TeacherOnly)
-	t.Run("GetAllCourses_NoParams", TestGetAllCourses_NoParams)
-	t.Run("CreateCourse", TestCreateCourse)
-}
-
 func TestCreateCourse(t *testing.T) {
 	db, mock := setupMockDB(t)
 	defer closeDB(db)
